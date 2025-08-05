@@ -14,7 +14,7 @@ interface AboutProps {
 const About = ({
   title = "ABOUT PRINCEY",
   greeting = "Hey guys!!",
-  description = "Welcome to Princey Glass, where passion meets craftsmanship in every piece we create. I'm Princey, and I've been crafting beautiful glass art for over 4 years now, turning molten glass into stunning pieces that tell stories.",
+  description = "Welcome to Princey Glass, where passion meets craftsmanship in every piece we create. I'm Princey, and I've been crafting beautiful glass art for over 4 years now, turning molten glass into stunning pieces that tell stories....",
   ctaText = "Read More",
 }: AboutProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
