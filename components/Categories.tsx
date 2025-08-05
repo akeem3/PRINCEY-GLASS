@@ -88,10 +88,10 @@ const Categories = ({
         <div className="text-center">
           <Link
             href={ctaLink}
-            className="inline-flex items-center px-10 py-5 bg-black text-white font-bold text-lg rounded-2xl hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 shadow-xl"
+            className="inline-flex items-center px-8 py-4 bg-black text-white font-semibold rounded-2xl hover:bg-[#727D57] transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             {ctaText}
-            <ArrowRight className="ml-3 h-6 w-6" />
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </div>
       </div>

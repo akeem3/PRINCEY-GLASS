@@ -46,7 +46,7 @@ const About = ({
                 <div className="mt-6">
                   <button
                     onClick={openModal}
-                    className="inline-flex items-center px-8 py-4 bg-black text-white font-bold text-lg rounded-2xl hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    className="inline-flex items-center px-8 py-4 bg-black text-white font-bold text-lg rounded-2xl hover:bg-[#727D57] transition-all duration-300 transform hover:scale-105 shadow-lg"
                   >
                     {ctaText}
                   </button>

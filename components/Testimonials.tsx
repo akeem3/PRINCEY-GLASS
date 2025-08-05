@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
 interface Testimonial {
@@ -20,6 +20,7 @@ const Testimonials = ({
   subtitle = "Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem",
 }: TestimonialsProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   const testimonials: Testimonial[] = [
     {
@@ -54,14 +55,32 @@ const Testimonials = ({
     },
   ];
 
+  // Auto-slide functionality
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000); // Change testimonial every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, testimonials.length]);
+
   const nextTestimonial = () => {
+    setIsAutoPlaying(false); // Pause auto-play on manual interaction
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
+    setIsAutoPlaying(false); // Pause auto-play on manual interaction
     setCurrentIndex(
       (prev) => (prev - 1 + testimonials.length) % testimonials.length
     );
+  };
+
+  const goToTestimonial = (index: number) => {
+    setIsAutoPlaying(false); // Pause auto-play on manual interaction
+    setCurrentIndex(index);
   };
 
   const renderStars = (rating: number) => {
@@ -96,7 +115,7 @@ const Testimonials = ({
           {/* Navigation Arrows */}
           <button
             onClick={prevTestimonial}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-200 shadow-lg"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#727D57] transition-colors duration-200 shadow-lg"
             aria-label="Previous testimonial"
           >
             <ChevronLeft size={24} className="text-gray-700" />
@@ -104,7 +123,7 @@ const Testimonials = ({
 
           <button
             onClick={nextTestimonial}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-200 shadow-lg"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#727D57] transition-colors duration-200 shadow-lg"
             aria-label="Next testimonial"
           >
             <ChevronRight size={24} className="text-gray-700" />
@@ -148,11 +167,11 @@ const Testimonials = ({
             {testimonials.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentIndex(index)}
+                onClick={() => goToTestimonial(index)}
                 className={`w-3 h-3 rounded-full transition-colors duration-200 ${
                   index === currentIndex
                     ? "bg-[#727D57]"
-                    : "bg-gray-300 hover:bg-gray-400"
+                    : "bg-gray-300 hover:bg-[#727D57]"
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
