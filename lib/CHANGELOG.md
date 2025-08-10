@@ -5,9 +5,9 @@
 | Area            | Tech                                                 |
 | --------------- | ---------------------------------------------------- |
 | Frontend        | Next.js + Tailwind CSS                               |
-| Backend         | Node.js + Express.js                                 |
+| Backend         | Next.js API Routes                                   |
 | Package Manager | pnpm (confirmed)                                     |
-| Database        | MySQL (suggested: PlanetScale)                       |
+| Database        | PostgreSQL (Aiven) + Prisma ORM                      |
 | Hosting         | Render (Free Tier)                                   |
 | Order Handling  | Google Sheets API (via Google Cloud Service Account) |
 | Version Control | Git + GitHub                                         |
@@ -18,21 +18,24 @@
 
 ```
 /princey-glass
-├── frontend/         # Next.js frontend
-│   ├── pages/
-│   ├── components/
-│   ├── public/
-│   └── styles/
+├── app/              # Next.js App Router
+│   ├── api/          # API routes
+│   │   ├── products/
+│   │   └── orders/
+│   ├── shop/         # Shop pages
+│   │   └── [id]/     # Individual product pages
+│   ├── components/   # React components
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
 │
-├── backend/          # Express server
-│   ├── routes/
-│   ├── controllers/
-│   ├── services/
-│   └── config/
+├── prisma/           # Database schema and migrations
+│   └── schema.prisma
 │
-├── shared/           # Common types/interfaces (if needed)
-├── .env              # API keys and DB connection strings
-├── docker/           # Optional for future containerization
+├── lib/              # Utility functions
+│   └── prisma.ts     # Prisma client
+│
+├── .env              # Environment variables
 └── README.md
 ```
 
@@ -57,13 +60,18 @@
 
 #### ✅ Backend Setup
 
-- [x] Use Express.js with CORS and .env config
-- [x] Install mysql2, dotenv, axios, googleapis
+- [x] **UPDATED**: Next.js API Routes (no separate Express server needed)
+- [x] **UPDATED**: Prisma ORM for database management
+- [x] Install prisma, @prisma/client
 
 #### ✅ Database Setup
 
-- [x] Recommend: PlanetScale — MySQL, scalable, free tier, no sleep like Render DB
-- [x] Create a products table: name, description, image, price
+- [x] **Updated**: PostgreSQL (Aiven) — scalable, reliable, production-ready
+- [x] **UPDATED**: Prisma ORM for database management
+- [x] **COMPLETED**: Prisma initialization (`npx prisma init`)
+- [x] **COMPLETED**: Prisma schema created at `prisma/schema.prisma`
+- [ ] Create Product model with Prisma schema
+- [ ] Run Prisma migration to create database tables
 
 #### ✅ Google Sheets API Setup
 
@@ -106,13 +114,11 @@ POST /api/order
 
 ## 🔐 Environment Variables Needed
 
-| Variable               | Use                 |
-| ---------------------- | ------------------- |
-| MYSQL_HOST             | PlanetScale DB host |
-| MYSQL_USER             | PlanetScale user    |
-| MYSQL_PASSWORD         | DB password         |
-| GOOGLE_SHEET_ID        | Google Sheet ID     |
-| GOOGLE_SERVICE_ACCOUNT | JSON credentials    |
+| Variable               | Use                                                |
+| ---------------------- | -------------------------------------------------- |
+| DATABASE_URL           | Aiven PostgreSQL connection string (✅ CONFIGURED) |
+| GOOGLE_SHEET_ID        | Google Sheet ID                                    |
+| GOOGLE_SERVICE_ACCOUNT | JSON credentials                                   |
 
 ## ✅ Best Practices & Tools
 
@@ -337,61 +343,24 @@ POST /api/order
 
 ## 🚀 Implementation Progress
 
-### ✅ Completed Components
+### ✅ **LANDING PAGE COMPLETED** (All Components Working)
 
-- [x] **Navbar Component** (`components/Navbar.tsx`)
+- [x] **Navbar Component** (`components/Navbar.tsx`) - Fixed positioning, responsive design
+- [x] **Hero Component** (`components/Hero.tsx`) - Glassblower background, "FIRED BEAUTY" headline
+- [x] **Categories Component** (`components/Categories.tsx`) - 3-column cards, olive green styling
+- [x] **About Component** (`components/About.tsx`) - Modal popup with detailed content
+- [x] **Custom Work Component** (`components/CustomWork.tsx`) - Overlapping design
+- [x] **Testimonials Component** (`components/Testimonials.tsx`) - Sliding carousel
+- [x] **Footer Component** (`components/Footer.tsx`) - Dark design, four-column layout
 
-  - Responsive design with mobile menu
-  - Placeholder for glassblower icon
-  - Navigation links: Home, Shopping, Contact
-  - **Fixed sticky positioning** with `fixed top-0 left-0 right-0 z-[9999]`
-  - Centered layout with max-width container
-  - Integrated into root layout
-  - Updated to match Figma design: light grey rounded navigation container
-  - Larger logo and improved spacing
-  - Black text on white background for navigation links
-  - Enhanced mobile dropdown with white background
-  - **Robust Implementation**: TypeScript interfaces, proper error handling, JSX.Element return types
-  - **Sticky Behavior Fix**: Changed from `sticky` to `fixed` positioning to ensure navbar stays visible when scrolling to categories section
+### 🔄 **SHOP PAGE IN PROGRESS** (Currently Working On)
 
-- [x] **Hero Component** (`components/Hero.tsx`)
-
-  - Optimized height (80vh) to reduce empty space and length
-  - Next.js Image placeholder for glassblower background
-  - Dark overlay for text readability (removed gradient backgrounds)
-  - Right-aligned content with "FIRED BEAUTY" and "HANDMADE MAGIC" headline
-  - Fresh copy: "Transform your space with handcrafted glass art..."
-  - CTA button with arrow icon and hover effects
-  - Responsive design with proper mobile scaling
-  - **Robust Implementation**: TypeScript interfaces, proper error handling, configurable props
-  - **Positioning Fix**: Absolute positioning to eliminate white space at top
-  - **Layout Flow**: Spacer div ensures Categories section appears below Hero
-
-- [x] **Categories Component** (`components/Categories.tsx`)
-
-  - Olive green background matching Figma design
-  - 3 horizontal product cards with enhanced styling
-  - Responsive grid layout (1 column mobile, 3 columns desktop)
-  - Enhanced card design with rounded-3xl corners and shadow-xl
-  - Hover animations with transform and shadow effects
-  - Larger typography and improved spacing
-  - Placeholder images for each category (Accessories, Vases & Jars, Figurines)
-  - CTA button with enhanced styling and larger size
-  - **Green Section Enhancement**: Added negative margins to spread green portion to screen edges
-  - **Improved Styling**: Added rounded-2xl corners to green section for better visual appeal
-  - **Proper Padding**: Added py-16 for top and bottom padding on green section
-  - **Robust Implementation**: TypeScript interfaces, proper error handling, configurable props
-
-- [x] **Footer Component** (`components/Footer.tsx`)
-  - **Dark Design**: Charcoal/dark gray background with light text for contrast
-  - **Four-Column Layout**: Brand/About, Company, Support, Social sections
-  - **Brand Section**: "Princey Glass" logo with vertical text layout and company description
-  - **Link Sections**: Organized navigation links with hover effects
-  - **Bottom Section**: Copyright and Payment Methods with border separator
-  - **Responsive Design**: Mobile-first approach with proper grid layout
-  - **TypeScript Implementation**: Proper interfaces for FooterLink and FooterColumn
-  - **Accessibility**: Proper link structure and semantic HTML
-  - **Integration**: Added to root layout for site-wide footer
+- [x] **Prisma Setup** - Initialized and schema created
+- [ ] **Database Schema** - Product model configuration
+- [ ] **API Routes** - Next.js App Router endpoints
+- [ ] **Shop Page Components** - Hero, banner, grid, cards
+- [ ] **Individual Product Pages** - Detail pages with Buy + Add to Cart
+- [ ] **Navigation Updates** - Shop routing and breadcrumbs
 
 ### 🎨 Design System Implementation
 
@@ -399,6 +368,7 @@ POST /api/order
 - [x] **Typography** - Bold headings, regular body text, consistent font weights
 - [x] **Component Structure** - Modular React components with Tailwind CSS
 - [x] **Responsive Design** - Mobile-first approach with breakpoints
+- [x] **Button Styling** - Consistent hover states with olive green (#727D57)
 
 ### 📋 Figma Design Analysis
 
@@ -407,12 +377,18 @@ Based on the provided Figma design, the landing page includes:
 1. **Header** - Princey Glass logo with glassblower icon + navigation ✅ **COMPLETED**
 2. **Hero Section** - Glassblower background with "FIRED BEAUTY" and "HANDMADE MAGIC" headline ✅ **COMPLETED**
 3. **Categories Section** - 3 product cards (Accessories, Vases & Jars, Figurines) ✅ **COMPLETED**
-4. **About Section** - Two-column layout with "ABOUT PRINCEY" card
-5. **Custom Work Section** - "REQUEST CUSTOM WORK" with glassblower image
-6. **Testimonials Section** - 3 testimonial cards with ratings
+4. **About Section** - Two-column layout with "ABOUT PRINCEY" card ✅ **COMPLETED**
+5. **Custom Work Section** - "REQUEST CUSTOM WORK" with glassblower image ✅ **COMPLETED**
+6. **Testimonials Section** - 3 testimonial cards with ratings ✅ **COMPLETED**
 7. **Footer** - Company info, links, and social media ✅ **COMPLETED**
 
-**📝 Content Note:** All placeholder text needs fresh copy - Lorem ipsum will be replaced with actual content during implementation.
+### 🛍️ **SHOP PAGE DESIGN** (From Attached Image)
+
+1. **Shop Hero** - "SHOPPING TIME" with glassblower background
+2. **Accessories Banner** - Olive green with "Accessories" title
+3. **Product Grid** - 3×4 layout (12 products total)
+4. **Product Cards** - Square images, white info boxes, "2 $" pricing, black "Buy" buttons
+5. **Individual Product Pages** - Full details with **Buy + Add to Cart buttons**
 
 **🔧 Development Standards:**
 
@@ -421,34 +397,42 @@ Based on the provided Figma design, the landing page includes:
 - **Code Quality**: High-level quality with thorough error checking
 - **Type Safety**: Strict TypeScript implementation with proper interfaces
 
-### 🔄 Next Implementation Steps
+### 🔄 **CURRENT IMPLEMENTATION FOCUS**
 
-1. **About Section** - Two-column layout with olive green card
-2. **Custom Work Section** - Image + content layout
-3. **Testimonials Section** - Carousel with 3 cards
+**NEXT: Shop Page Implementation**
+
+1. **Configure Prisma schema** for Product model
+2. **Create Next.js API routes** in `/app/api/` folder
+3. **Build shop page components** (Hero, banner, grid, cards)
+4. **Implement individual product pages** with Buy + Add to Cart functionality
 
 ---
 
 ## 🆕 Recent Updates (February 2025)
 
-### ✅ Navbar Sticky Behavior Fix
+### ✅ **MAJOR ARCHITECTURE CHANGE - RESTARTED IMPLEMENTATION**
 
-- **Issue**: Navbar disappeared when scrolling to categories section
-- **Solution**: Changed from `sticky` to `fixed` positioning with `z-[9999]`
-- **Result**: Navbar now stays visible at all times during scrolling
+- **Previous Approach**: Separate Express.js backend + MySQL
+- **New Approach**: Next.js API Routes + Prisma ORM + PostgreSQL (Aiven)
+- **Reason**: Simplified architecture, better integration, no separate server needed
+- **Status**: Prisma initialized, ready for schema configuration
 
-### ✅ Categories Section Enhancement
+### ✅ **Prisma Setup Completed**
 
-- **Green Section**: Spread to screen edges using negative margins
-- **Styling**: Added rounded-2xl corners for better visual appeal
-- **Padding**: Proper top and bottom padding (py-16) for better spacing
+- **Initialization**: `npx prisma init` completed successfully
+- **Schema Created**: `prisma/schema.prisma` ready for Product model
+- **Database**: Aiven PostgreSQL connection configured
+- **Environment**: DATABASE_URL properly set in .env
 
-### ✅ Footer Component Implementation
+### ✅ **Previous Landing Page Components** (Still Working)
 
-- **Design**: Matches Figma design with dark background and four-column layout
-- **Features**: Brand section, company links, support links, social media links
-- **Integration**: Added to root layout for site-wide footer
-- **Responsive**: Mobile-first design with proper grid layout
+- **Navbar**: Fixed positioning, responsive design
+- **Hero**: Glassblower background with "FIRED BEAUTY" headline
+- **Categories**: 3-column product cards with olive green styling
+- **About**: Modal popup with detailed content
+- **Custom Work**: Overlapping design with glass working image
+- **Testimonials**: Sliding carousel with star ratings
+- **Footer**: Dark design with four-column layout
 
 ## 📝 Changes
 
@@ -528,6 +512,260 @@ Based on the provided Figma design, the landing page includes:
 
 ---
 
+## 🛍️ Shop Page Implementation Plan (February 2025)
+
+### **Phase 1: Database & Backend Setup (CURRENTLY WORKING ON)**
+
+#### **Step 1.1: Database Setup**
+
+- [x] **Aiven PostgreSQL database** - User has set up and ready
+- [x] **Prisma initialization** - `npx prisma init` completed
+- [x] **Prisma schema created** - `prisma/schema.prisma` ready for configuration
+- [ ] **Configure Prisma schema** for Product model:
+  ```prisma
+  model Product {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String
+    category    String   @default("Accessories")
+    price       Decimal
+    image_url   String
+    created_at  DateTime @default(now())
+    updated_at  DateTime @updatedAt
+  }
+  ```
+- [ ] **Run Prisma migration** to create database tables
+- [ ] **Seed database** with 12 sample pendant products
+
+#### **Step 1.2: Next.js API Routes Setup**
+
+- [ ] **Create `/app/api/products/route.ts`** - GET all products with pagination
+- [ ] **Create `/app/api/products/[id]/route.ts`** - GET single product
+- [ ] **Create `/app/api/products/categories/route.ts`** - GET all categories
+- [ ] **Create `/app/api/products/search/route.ts`** - Search products
+- [ ] **Create `/app/api/orders/route.ts`** - POST order submission
+- [ ] **Set up Prisma client** in `lib/prisma.ts`
+- [ ] **Add error handling** for API endpoints
+
+#### **Step 1.3: Environment Variables**
+
+- [x] **DATABASE_URL configured** in .env file
+- [ ] **Google Sheets integration** (for future order handling)
+
+### **Phase 2: Frontend Implementation (AI TASKS)**
+
+#### **Step 2.1: Create Shop Page Route**
+
+- [ ] **Create `/app/shop/page.tsx`** - Main shop page
+- [ ] **Update navbar** "Shopping" link to point to `/shop`
+
+#### **Step 2.2: Shop Hero Component**
+
+- [ ] **Create `components/ShopHero.tsx`**:
+  - Background: Glassblower working image
+  - Title: "SHOPPING TIME"
+  - Subtitle: "Get Shopping mudafuckers!!!"
+  - Description: Lorem ipsum text
+  - Rounded bottom corners
+
+#### **Step 2.3: Product Grid Component**
+
+- [ ] **Create `components/ProductGrid.tsx`**:
+  - 3-column responsive grid (desktop)
+  - 2-column for tablet
+  - 1-column for mobile
+  - Loading states
+  - Error handling
+
+#### **Step 2.4: Product Card Component**
+
+- [ ] **Create `components/ProductCard.tsx`**:
+  - Product image (square format)
+  - Product name
+  - Category badge (olive green)
+  - Price display
+  - "Buy" button with hover effects
+
+#### **Step 2.5: Product Modal Component**
+
+- [ ] **Create `components/ProductModal.tsx`**:
+  - Large product image
+  - Product name and category
+  - Detailed description
+  - Price and purchase options
+  - Close/back navigation
+
+### **Phase 3: API Integration (AI TASKS)**
+
+#### **Step 3.1: API Service**
+
+- [ ] **Create `lib/api.ts`** for API calls:
+  ```typescript
+  export const fetchProducts = async () => {
+    /* API call */
+  };
+  export const fetchProduct = async (id: string) => {
+    /* API call */
+  };
+  export const submitOrder = async (orderData: OrderData) => {
+    /* API call */
+  };
+  ```
+
+#### **Step 3.2: Data Fetching**
+
+- [ ] **Integrate API calls** in ProductGrid component
+- [ ] **Add loading states** with skeleton components
+- [ ] **Add error handling** with user-friendly messages
+
+### **Phase 4: Styling & Polish (AI TASKS)**
+
+#### **Step 4.1: Design Implementation**
+
+- [ ] **Apply olive green color scheme** (#727D57)
+- [ ] **Use light background** (#F5F5DC)
+- [ ] **Consistent button styling** across components
+- [ ] **Responsive design** for all screen sizes
+
+#### **Step 4.2: Navigation Updates**
+
+- [ ] **Update navbar** "Shopping" link to `/shop`
+- [ ] **Add breadcrumb navigation**
+- [ ] **Back to home functionality**
+
+### **Phase 5: Advanced Features (AI TASKS)**
+
+#### **Step 5.1: Filtering & Search**
+
+- [ ] **Category filtering** functionality
+- [ ] **Search products** by name
+- [ ] **Filter UI components**
+
+#### **Step 5.2: Order System**
+
+- [ ] **Order form modal** when "Buy" is clicked
+- [ ] **Google Sheets integration** for order tracking
+- [ ] **Order confirmation** messages
+
+### **🎯 Design Specifications:**
+
+#### **Shop Hero Section:**
+
+- Background: Glassblower working image (same as home)
+- Title: "SHOPPING TIME"
+- Subtitle: "Get Shopping mudafuckers!!!"
+- Description: Lorem ipsum text
+- Rounded bottom corners
+
+#### **Accessories Section Banner:**
+
+- Olive green background
+- White text: "Accessories"
+- Subtitle: "Beauty is in the eyes of the beholder!!"
+
+#### **Product Grid:**
+
+- Layout: 3 columns × 4 rows = 12 products (as per design image)
+- Card Design:
+  - Square product image (teardrop pendants on black background)
+  - White information box below image
+  - Product name (e.g., "Pendant one", "Pendant two")
+  - Price: "2 $" for all products
+  - "Buy" button (black background, white text)
+
+#### **Individual Product Pages:**
+
+- Route: `/shop/[id]` for each product
+- Layout: Dedicated page with full product details
+- Content:
+  - Large product image
+  - Product name and category
+  - Detailed description
+  - Price and purchase options
+  - Back to shop navigation
+
+### **🔧 Technical Implementation:**
+
+#### **Components to Create:**
+
+- **ShopHero.tsx** - Hero section with "SHOPPING TIME" and glassblower background
+- **AccessoriesBanner.tsx** - Olive green banner with "Accessories" title
+- **ProductGrid.tsx** - Main product grid container (3×4 layout, 12 products)
+- **ProductCard.tsx** - Individual product card with image, name, price, buy button
+- **ProductPage.tsx** - Individual product page component with **Buy + Add to Cart buttons**
+- **ShopPage.tsx** - Main shop page component
+
+#### **API Integration:**
+
+- **Database Schema**: PostgreSQL with Aiven + Prisma ORM
+- **API Routes**: Next.js App Router (`/app/api/products/`)
+- **Responsive Design**:
+  - Desktop: 3-column grid
+  - Tablet: 2-column grid
+  - Mobile: 1-column grid
+- **Navigation**: Consistent with home page navbar
+- **Individual Product Pages**: `/shop/[id]` routing
+
+#### **🎯 Features:**
+
+- **Product Display**: 12 products in responsive grid (3×4 layout)
+- **Individual Product Pages**: Dedicated pages for each product (`/shop/[id]`)
+- **Buy + Add to Cart Buttons**: On individual product pages (as requested)
+- **Category Filtering**: Filter by product category
+- **Search Functionality**: Search products by name
+- **Loading States**: Skeleton loading while fetching data
+- **Error Handling**: Graceful error display
+- **Navigation**: Back to shop from product pages
+
+#### **🔗 Navigation:**
+
+- Update navbar "Shopping" link to point to /shop
+- Individual product page routing (`/shop/[id]`)
+- Back to shop navigation from product pages
+- Breadcrumb navigation (optional)
+
+### **📋 Implementation Priority:**
+
+#### **CURRENT IMPLEMENTATION STATUS:**
+
+1. ✅ **Aiven PostgreSQL database** - Already set up
+2. ✅ **DATABASE_URL configured** in .env file
+3. ✅ **Prisma initialized** - `npx prisma init` completed
+4. ✅ **Prisma schema created** - Ready for Product model configuration
+5. 🔄 **NEXT: Configure Prisma schema** and run migration
+6. 🔄 **NEXT: Create Next.js API routes** in `/app/api/` folder
+
+#### **AI TASKS (After Database Setup):**
+
+1. **Frontend Shop Page Components**:
+
+   - `/app/shop/page.tsx` - Main shop page
+   - `components/ShopHero.tsx` - Hero section
+   - `components/AccessoriesBanner.tsx` - Olive green banner
+   - `components/ProductGrid.tsx` - 3×4 product grid
+   - `components/ProductCard.tsx` - Individual product cards
+
+2. **Individual Product Pages**:
+
+   - `/app/shop/[id]/page.tsx` - Product detail pages
+   - `components/ProductPage.tsx` - Product detail component
+   - **Buy and Add to Cart buttons** (as requested)
+
+3. **Navigation Updates**:
+
+   - Update navbar "Shopping" link to `/shop`
+   - Add breadcrumb navigation
+   - Back navigation from product pages
+
+4. **Features Implementation**:
+   - Product filtering by category
+   - Search functionality
+   - Loading states with skeleton components
+   - Error handling with user-friendly messages
+   - Responsive design (3 columns desktop, 2 tablet, 1 mobile)
+
+---
+
 _Last Updated: February 8, 2025_
-_Version: 1.0.11_
-_Status: Implementation Phase - Global Button Hover Consistency Completed_
+_Version: 1.0.14_
+_Status: RESTARTED - Using Next.js API Routes + Prisma - Shop Page Implementation In Progress_

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Princey Glass - Bold Style Every Day",
+  title: "Princey Glass",
   description:
     "Handcrafted glass art and accessories. Discover unique glass pendants, vases, and custom pieces.",
 };
