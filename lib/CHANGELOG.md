@@ -423,6 +423,9 @@ Based on the provided Figma design, the landing page includes:
 - **Schema Created**: `prisma/schema.prisma` ready for Product model
 - **Database**: Aiven PostgreSQL connection configured
 - **Environment**: DATABASE_URL properly set in .env
+- **Client Generated**: Prisma client generated successfully
+- **Test API Created**: `/api/test-db` route for connection testing
+- **Connection Issue**: Database connection failing - Hostname resolution error (ENOTFOUND)
 
 ### ✅ **Previous Landing Page Components** (Still Working)
 
@@ -521,7 +524,7 @@ Based on the provided Figma design, the landing page includes:
 - [x] **Aiven PostgreSQL database** - User has set up and ready
 - [x] **Prisma initialization** - `npx prisma init` completed
 - [x] **Prisma schema created** - `prisma/schema.prisma` ready for configuration
-- [ ] **Configure Prisma schema** for Product model:
+- [x] **Configure Prisma schema** for Product model:
   ```prisma
   model Product {
     id          Int      @id @default(autoincrement())
@@ -530,10 +533,11 @@ Based on the provided Figma design, the landing page includes:
     category    String   @default("Accessories")
     price       Decimal
     image_url   String
-    created_at  DateTime @default(now())
-    updated_at  DateTime @updatedAt
   }
   ```
+- [x] **Prisma client generated** - Client generated successfully
+- [x] **Database connection test** - Test API route created at `/api/test-db`
+- [x] **Database connection troubleshooting** - Identified common Aiven issues and solutions
 - [ ] **Run Prisma migration** to create database tables
 - [ ] **Seed database** with 12 sample pendant products
 
@@ -732,8 +736,10 @@ Based on the provided Figma design, the landing page includes:
 2. ✅ **DATABASE_URL configured** in .env file
 3. ✅ **Prisma initialized** - `npx prisma init` completed
 4. ✅ **Prisma schema created** - Ready for Product model configuration
-5. 🔄 **NEXT: Configure Prisma schema** and run migration
-6. 🔄 **NEXT: Create Next.js API routes** in `/app/api/` folder
+5. ✅ **Prisma schema configured** - Product model added with required fields
+6. 🔄 **NEXT: Run Prisma migration** to create database tables
+7. 🔄 **NEXT: Seed database** with 12 sample pendant products
+8. 🔄 **NEXT: Create Next.js API routes** in `/app/api/` folder
 
 #### **AI TASKS (After Database Setup):**
 
@@ -766,6 +772,58 @@ Based on the provided Figma design, the landing page includes:
 
 ---
 
+## 🔧 **Database Connection Troubleshooting Guide**
+
+### **Common Aiven Issues & Solutions:**
+
+#### **1. IP Whitelisting**
+
+- **Default:** Aiven allows all IPs (0.0.0.0/0) by default
+- **If restricted:** Add your development machine's public IP
+- **Solution:** Go to Aiven Console → Service Settings → Set IP allowlist
+
+#### **2. SSL Configuration**
+
+- **Required:** `sslmode=require` for basic TLS
+- **Stricter:** `sslmode=verify-ca` or `verify-full` with CA certificate
+- **Connection String Format:**
+  ```
+  postgres://username:password@host:port/database?sslmode=require
+  ```
+
+#### **3. Service Status**
+
+- **Check:** Aiven Console → Overview page
+- **Ensure:** Service is running, not paused or errored
+
+#### **4. Testing Connection**
+
+- **CLI Test:** `psql "postgres://avnadmin:PASSWORD@HOST:PORT/defaultdb?sslmode=require"`
+- **GUI Tools:** pgAdmin, DBeaver with SSL settings
+- **Aiven CLI:** `avn service connection-info pg uri your-service-name`
+
+#### **5. Alternative Solutions**
+
+- **Local PostgreSQL** for development
+- **Cloud Alternatives:** Supabase, Neon, Railway
+- **Temporary Switch** if Aiven setup remains blocked
+
+### **Current Issue Identified:**
+
+- **Error:** `ENOTFOUND princeyglass-princeyglass-06b4.h.aivencloud.com`
+- **Cause:** Hostname cannot be resolved - likely Aiven service is paused/stopped
+- **Solution:** Check Aiven console for service status
+
+### **Next Steps:**
+
+1. **Check Aiven Console** - Verify service is running
+2. **Get updated connection string** from Aiven console
+3. **Update .env** with correct hostname
+4. **Retry connection test**
+5. **Alternative:** Set up local PostgreSQL for development
+
+---
+
 _Last Updated: February 8, 2025_
-_Version: 1.0.14_
-_Status: RESTARTED - Using Next.js API Routes + Prisma - Shop Page Implementation In Progress_
+_Version: 1.0.15_
+_Status: RESTARTED - Using Next.js API Routes + Prisma - Database Connection Troubleshooting Complete_
