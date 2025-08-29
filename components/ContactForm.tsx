@@ -45,8 +45,8 @@ const ContactForm = () => {
                   Send us a Message
                 </CardTitle>
                 <p className="text-gray-600">
-                  Fill out the form below and we'll get back to you as soon as
-                  possible.
+                  Fill out the form below and we&#39;ll get back to you as soon
+                  as possible.
                 </p>
               </CardHeader>
               <CardContent>
@@ -147,8 +147,8 @@ const ContactForm = () => {
                 Get in Touch
               </h2>
               <p className="text-lg text-gray-600 mb-8">
-                We're here to help with any questions about our glass art,
-                custom orders, or general inquiries. Don't hesitate to reach
+                We&#39;re here to help with any questions about our glass art,
+                custom orders, or general inquiries. Don&#39;t hesitate to reach
                 out!
               </p>
             </div>
