@@ -30,8 +30,8 @@ const ContactHero = () => {
               </p>
               <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
                 Have questions about our glass art? Want to discuss a custom
-                piece? We'd love to hear from you and help bring your vision to
-                life.
+                piece? We&#39;d love to hear from you and help bring your vision
+                to life.
               </p>
             </div>
           </div>
